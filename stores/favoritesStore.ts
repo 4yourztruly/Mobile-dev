@@ -6,6 +6,7 @@ interface FavoritesState {
     favorites: string[],
     addFavorite: (item: string) => void,
     removeFavorite: (item: string) => void
+    togglePreference: () => void,
     isCelcius: boolean;
 }
 
@@ -15,8 +16,9 @@ export const useFavoritesStore = create<FavoritesState>()(
       favorites: [],
       isCelcius: false,
 
-      isPreferenceCelcius: (preference: boolean) => 
-        set({isCelcius: preference}),
+      togglePreference: () => 
+        set((state) => ( {isCelcius: !state.isCelcius}
+        )),
 
       addFavorite: (item) =>
         set((state) => ({
