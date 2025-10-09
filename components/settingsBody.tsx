@@ -14,5 +14,6 @@ export default function SettingsBody() {
     }}>
         <Text style={{ color: 'white', fontSize: 30, paddingBottom:40,}}>{`You are using ${isCelcius ? 'Celcius' : 'Farenheit'}`}</Text>
         <Button title={`Toggle ${isCelcius ? 'Farenheit' : 'Celcius'}`} onPress={togglePreference}></Button>
-    </View>)
+    </View>
+    )
 }
