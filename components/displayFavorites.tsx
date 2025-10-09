@@ -1,10 +1,13 @@
 import { useFavoritesStore } from "@/stores/favoritesStore";
-import { Button, ScrollView, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Button, Pressable, ScrollView, Text, View } from "react-native";
 
 export default function DisplayFavorites() {
     const {favorites, removeFavorite} = useFavoritesStore((state) => state);
-
-    return (<View style={{
+    const router = useRouter();
+    
+    return (
+    <View style={{
         height:'100%',
         display:'flex',
         flexDirection:'column',
@@ -15,10 +18,22 @@ export default function DisplayFavorites() {
                 <Text style={{color:'white',}}>No favorites yet!</Text>
             ) : (
                  favorites.map((item,index) => (
-                <View key={index}>
-                    <Text>
+                <View key={index} style={{
+                    borderWidth:1,
+                    borderColor:'white',
+                    padding:25,
+                    borderRadius:15,
+                    marginBottom:20,
+                }}>
+                    <Pressable onPress={() => router.push(`/?city=${encodeURIComponent(item)}`)}>
+                        <Text style={{
+                        color:'white',
+                        fontSize:20,
+                        paddingBottom: 10,
+                    }}>
                         {item}
                     </Text>
+                    </Pressable>
                 <Button title='Delete' onPress={() => removeFavorite(item)}></Button>
                 </View>
             ))

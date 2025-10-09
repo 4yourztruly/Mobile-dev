@@ -4,15 +4,16 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface FavoritesState {
     favorites: string[],
-    addFavorite: (item: string) => void,
-    removeFavorite: (item: string) => void
+    addFavorite: (city: string) => void,
+    removeFavorite: (city: string) => void
     togglePreference: () => void,
+    isFavorite: (city: string) => boolean
     isCelcius: boolean;
 }
 
 export const useFavoritesStore = create<FavoritesState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       favorites: [],
       isCelcius: false,
 
@@ -20,14 +21,17 @@ export const useFavoritesStore = create<FavoritesState>()(
         set((state) => ( {isCelcius: !state.isCelcius}
         )),
 
-      addFavorite: (item) =>
+      addFavorite: (city) =>
         set((state) => ({
-          favorites: [...state.favorites, item],
+          favorites: [...state.favorites, city.trim().toLowerCase()],
         })),
 
-      removeFavorite: (item) =>
+      isFavorite: (city) =>
+        get().favorites.includes(city.trim().toLowerCase()),
+
+      removeFavorite: (city) =>
         set((state) => ({
-          favorites: state.favorites.filter((fav) => fav !== item),
+          favorites: state.favorites.filter((fav) => fav !== city.trim().toLowerCase()),
         })),
     }),
     {

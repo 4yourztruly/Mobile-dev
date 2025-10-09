@@ -21,6 +21,7 @@ export async function getWeather(city: string) {
     tempF: weatherData.main.temp *9/5 +32,
     weatherType: weatherData.weather[0].main,
     description: weatherData.weather[0].description,
+    city: weatherData.name
     };
 
     return cityWeather;
