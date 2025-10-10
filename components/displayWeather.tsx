@@ -1,6 +1,7 @@
-import { getWeather } from '@/api/api';
+import { getWeather, getWeatherByCoordinates } from '@/api/api';
 import { useFavoritesStore } from '@/stores/favoritesStore';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import * as Location from 'expo-location';
 import { useSearchParams } from 'expo-router/build/hooks';
 import { useEffect, useState } from "react";
 import { Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
@@ -92,6 +93,27 @@ export default function DisplayWeather() {
 
     const currentIsFavorite = weather?.city && isFavorite(weather.city);
 
+    const getWeatherByGPS = async () => {
+        try {
+            const permission = await Location.requestForegroundPermissionsAsync();
+
+            if(!permission.granted) {
+                setError('Permission was not granted')
+                return;
+            }
+
+            const location = await Location.getCurrentPositionAsync({});
+            const coords = {
+                lat: location.coords.latitude,
+                lon: location.coords.longitude,
+            };
+            const data = await getWeatherByCoordinates(coords.lat, coords.lon);
+            setWeather(data);
+        } catch (err) {
+            setError('Error getting GPS location');
+        }
+    } 
+
     return (
         <View style={{
             flex: 1,
@@ -110,7 +132,7 @@ export default function DisplayWeather() {
                     </View>
                     <MaterialIcons name={getWeatherIcon(weather.weatherType)} size={250} color={getWeatherColor(weather.weatherType)} ></MaterialIcons>
                     <Text style={styles.text}>{`${weather.city}`}</Text>
-                    <Text style={styles.text}>{`${weather.weatherType} and temparature is ${isCelcius ? weather.tempC : weather.tempF} ${isCelcius ? 'C' : 'F'}`}</Text>
+                    <Text style={styles.text}>{`${weather.weatherType} ${isCelcius ? weather.tempC : weather.tempF} ${isCelcius ? 'C' : 'F'}`}</Text>
                     <Text style={styles.text}>{`${weather.description}`}</Text>
 
                 </View>
@@ -134,7 +156,7 @@ export default function DisplayWeather() {
                 marginBottom: 10,
             }} placeholder='Enter name of a city here'></TextInput>
             <Button title='Submit' onPress={() => handleSubmit(city)}></Button>
-            <Pressable><Text style={styles.text}>GPS</Text></Pressable>
+            <Pressable onPress={getWeatherByGPS}><Text style={styles.text}>GPS</Text></Pressable>
 
         </View>
     )

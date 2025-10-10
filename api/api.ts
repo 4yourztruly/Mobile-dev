@@ -30,3 +30,24 @@ export async function getWeather(city: string) {
     throw error;
    }
 }
+
+export async function getWeatherByCoordinates(lat: number, lon: number) {
+    try{
+    const weatherResponse = await fetch(`${API_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`);
+
+    const weatherData = await weatherResponse.json();
+
+    const cityWeather = {
+    tempC: weatherData.main.temp,
+    tempF: weatherData.main.temp *9/5 +32,
+    weatherType: weatherData.weather[0].main,
+    description: weatherData.weather[0].description,
+    city: weatherData.name
+    };
+
+    return cityWeather;
+   } catch(error) {
+    console.error('Error fetching weather',error);
+    throw error;
+   }
+}
