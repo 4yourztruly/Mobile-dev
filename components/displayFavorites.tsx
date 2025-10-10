@@ -25,7 +25,7 @@ export default function DisplayFavorites() {
                     borderRadius:15,
                     marginBottom:20,
                 }}>
-                    <Pressable onPress={() => router.push(`/?city=${encodeURIComponent(item)}`)}>
+                    <Pressable onPress={() => router.push({pathname: '/', params: {city: `${item}`}})}>
                         <Text style={{
                         color:'white',
                         fontSize:20,
