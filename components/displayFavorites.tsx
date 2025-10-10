@@ -7,13 +7,21 @@ export default function DisplayFavorites() {
     const router = useRouter();
     
     return (
+    <ScrollView style={{
+        flex:1,
+        width:'100%',
+    }} contentContainerStyle={{
+        flexGrow:1,
+        alignItems:'center',
+        }}>
     <View style={{
         height:'100%',
         display:'flex',
         flexDirection:'column',
         paddingTop:50,
+        width:'60%',
+        alignItems:'center',
     }}>
-        <ScrollView>
             {favorites.length === 0 ? (
                 <Text style={{color:'white',}}>No favorites yet!</Text>
             ) : (
@@ -38,7 +46,8 @@ export default function DisplayFavorites() {
                 </View>
             ))
             )}
-           
-        </ScrollView>
-    </View>)
+    </View>
+    </ScrollView>
+    )
+    
 }
