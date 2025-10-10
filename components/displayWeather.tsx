@@ -1,7 +1,8 @@
 import { getWeather } from '@/api/api';
 import { useFavoritesStore } from '@/stores/favoritesStore';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useState } from "react";
+import { useSearchParams } from 'expo-router/build/hooks';
+import { useEffect, useState } from "react";
 import { Button, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function DisplayWeather() {
@@ -14,8 +15,18 @@ export default function DisplayWeather() {
     const [weather, setWeather] = useState<any>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+     
+    const params = useSearchParams();
+    const urlCity = params.get('city')
+    console.log(urlCity);
+
+    useEffect(() => {
+        if(!urlCity) return;
+
+        handleSubmit(urlCity);
+    }, [urlCity]);
     
-    const handleSubmit = async () => {
+    const handleSubmit = async (city: string) => {
         if (!city.trim()) return setError("Please enter a city name")
 
         setLoading(true);
@@ -28,6 +39,7 @@ export default function DisplayWeather() {
                 setError('city not found');
             } else {
                 setWeather(data);
+                setCity('');
                 console.log(data)
             }
         }
@@ -121,7 +133,7 @@ export default function DisplayWeather() {
                 borderRadius: 15,
                 marginBottom: 10,
             }} placeholder='Enter name of a city here'></TextInput>
-            <Button title='Submit' onPress={() => handleSubmit()}></Button>
+            <Button title='Submit' onPress={() => handleSubmit(city)}></Button>
             <Pressable><Text style={styles.text}>GPS</Text></Pressable>
 
         </View>
